@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator XAUUSD Sniper</title>
+    <!-- Kita menggunakan HTA meta tag agar jika diubah ekstensi ke .hta bisa berjalan sempurna di Windows -->
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Lock Screen Styles */
+        #lockScreen {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 32px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border);
+            display: none; /* Controlled by JS */
+        }
+
+        #lockScreen h2 {
+            margin-bottom: 20px;
+            color: var(--accent-red);
+        }
+
+        #lockScreen p {
+            margin-bottom: 15px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        #deviceIdDisplay {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            color: var(--primary);
+            margin-bottom: 20px;
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        /* Main Content wrapper */
+        #mainContent {
+            display: none; /* Controlled by JS */
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .calculator-container {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 32px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border);
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 8px;
+            font-size: 24px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 24px;
+            margin-top: 0;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            margin-top: 8px;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .results {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .result-section {
+            margin-bottom: 20px;
+        }
+
+        .result-section h3 {
+            font-size: 15px;
+            margin-bottom: 12px;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+
+        .table-container {
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background-color: var(--bg-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th,
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: rgba(0, 0, 0, 0.2);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .td-level {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .td-value {
+            font-family: Consolas, monospace;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .row-up {
+            border-left: 3px solid var(--accent-green);
+            transition: background-color 0.2s;
+        }
+
+        .row-up:hover {
+            background-color: rgba(16, 185, 129, 0.05);
+        }
+
+        .row-down {
+            border-left: 3px solid var(--accent-red);
+            transition: background-color 0.2s;
+        }
+
+        .row-down:hover {
+            background-color: rgba(239, 68, 68, 0.05);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Lock Screen -->
+    <div id="lockScreen">
+        <h2>Aplikasi Terkunci</h2>
+        <p>Aplikasi ini dikunci dan hanya dapat digunakan pada 1 perangkat. Silakan masukkan PIN aktivasi.</p>
+        <p>Device ID Anda:</p>
+        <div id="deviceIdDisplay">------</div>
+        <div class="input-group">
+            <input type="text" id="activationPin" placeholder="Masukkan PIN Aktivasi" maxlength="6">
+        </div>
+        <button onclick="activateDevice()">Aktivasi Perangkat</button>
+        <p style="margin-top: 15px; font-size: 12px; color: var(--text-muted);">*Hubungi admin untuk mendapatkan PIN Aktivasi.</p>
+    </div>
+
+    <!-- Main Content (Hidden initially) -->
+    <div id="mainContent">
+        <div class="calculator-container">
+            <h2 style="color: var(--text-main);">Kalkulator XAUUSD Sniper</h2>
+            <p class="subtitle">Kalkulator Level Support & Resistance</p>
+            <div id="statusWaktu" style="text-align: center; font-size: 14px; color: var(--accent-red); margin-top: 10px; margin-bottom: 20px; font-weight: bold;"></div>
+
+            <div class="input-group">
+                <label for="nilaiBawah" style="text-align: left;">Nilai Bawah (Low) - Untuk Target Naik</label>
+                <input type="number" id="nilaiBawah" step="any" placeholder="Contoh: 2300.50" style="text-align: left;">
+            </div>
+
+            <div class="input-group">
+                <label for="nilaiAtas" style="text-align: left;">Nilai Atas (High) - Untuk Target Turun</label>
+                <input type="number" id="nilaiAtas" step="any" placeholder="Contoh: 2350.00" style="text-align: left;">
+            </div>
+
+            <button onclick="hitungGann()">Hitung Level</button>
+
+            <div class="results" id="results">
+                <!-- Hasil JavaScript akan dimasukkan ke sini -->
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px; font-size: 12px; color: var(--text-muted); padding-top: 15px; border-top: 1px solid var(--border);">
+                &copy; Hak Cipta Pak Dhe Soegeng
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // === LOCK SYSTEM LOGIC ===
+        document.addEventListener("DOMContentLoaded", function() {
+            const lockScreen = document.getElementById('lockScreen');
+            const mainContent = document.getElementById('mainContent');
+            const deviceIdDisplay = document.getElementById('deviceIdDisplay');
+            
+            // Check if already activated
+            let isActivated = localStorage.getItem('kalkulator_sniper_activated_v1');
+            let expiryTime = localStorage.getItem('kalkulator_sniper_expiry_v1');
+            
+            if (isActivated === 'true') {
+                if (expiryTime && Date.now() > parseInt(expiryTime)) {
+                    // Kedaluwarsa
+                    alert("Masa aktif aplikasi Anda telah habis. Silakan hubungi admin untuk aktivasi ulang.");
+                    localStorage.removeItem('kalkulator_sniper_activated_v1');
+                    localStorage.removeItem('kalkulator_sniper_expiry_v1');
+                    localStorage.removeItem('kalkulator_sniper_deviceId_v1');
+                    location.reload();
+                    return;
+                }
+                
+                // Device already activated and not expired, show main app
+                lockScreen.style.display = 'none';
+                mainContent.style.display = 'flex';
+                tampilkanSisaWaktu();
+            } else {
+                // Not activated, handle Device ID
+                let deviceId = localStorage.getItem('kalkulator_sniper_deviceId_v1');
+                if (!deviceId) {
+                    // Generate a random 6-digit Device ID
+                    deviceId = Math.floor(100000 + Math.random() * 900000).toString();
+                    localStorage.setItem('kalkulator_sniper_deviceId_v1', deviceId);
+                }
+                deviceIdDisplay.textContent = deviceId;
+                lockScreen.style.display = 'block';
+                mainContent.style.display = 'none';
+            }
+        });
+
+        function activateDevice() {
+            const pinInput = document.getElementById('activationPin').value.trim();
+            const deviceId = localStorage.getItem('kalkulator_sniper_deviceId_v1');
+            
+            if (!pinInput) {
+                alert('Silakan masukkan PIN Aktivasi!');
+                return;
+            }
+
+            // Mencari kecocokan PIN dengan durasi (1 hari hingga 3650 hari / 10 tahun)
+            let foundDuration = 0;
+            for (let i = 1; i <= 3650; i++) {
+                let calculatedNum = parseInt(deviceId) * 3 + 777 + (i * 123);
+                let expectedPin = calculatedNum.toString().slice(-6);
+                
+                if (pinInput === expectedPin) {
+                    foundDuration = i;
+                    break;
+                }
+            }
+            
+            // Master key '888888' memberikan akses permanen (9999 hari)
+            if (pinInput === '888888') {
+                foundDuration = 9999;
+            }
+            
+            if (foundDuration > 0) {
+                const expiryTime = Date.now() + (foundDuration * 24 * 60 * 60 * 1000);
+                
+                localStorage.setItem('kalkulator_sniper_activated_v1', 'true');
+                localStorage.setItem('kalkulator_sniper_expiry_v1', expiryTime);
+                
+                let durasiText = foundDuration === 9999 ? "Permanen" : `${foundDuration} hari`;
+                alert(`Aktivasi Berhasil! Perangkat ini memiliki akses selama ${durasiText}.`);
+                
+                document.getElementById('lockScreen').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'flex';
+                tampilkanSisaWaktu();
+            } else {
+                alert('PIN Aktivasi SALAH! Silakan periksa kembali atau hubungi admin.');
+            }
+        }
+
+        function tampilkanSisaWaktu() {
+            let expiryTime = localStorage.getItem('kalkulator_sniper_expiry_v1');
+            if (expiryTime) {
+                let sisaMs = parseInt(expiryTime) - Date.now();
+                let sisaHari = Math.ceil(sisaMs / (1000 * 60 * 60 * 24));
+                document.getElementById('statusWaktu').innerText = `⏳ Masa Aktif Tersisa: ${sisaHari} Hari`;
+            }
+        }
+
+        // === ORIGINAL CALCULATOR LOGIC ===
+        function hitungGann() {
+            const inputBawah = document.getElementById('nilaiBawah').value;
+            const inputAtas = document.getElementById('nilaiAtas').value;
+            const resultsDiv = document.getElementById('results');
+
+            resultsDiv.innerHTML = '';
+            let hasResults = false;
+
+            const levelNames = [
+                "1 (Minor)", 
+                "2 (Kuartal)", 
+                "3 (Menengah)", 
+                "4 (Mayor / Half-Cycle)", 
+                "5 (Lanjutan)", 
+                "6 (Signifikan)", 
+                "7 (Ekstrem)", 
+                "8 (Puncak / Full-Cycle)"
+            ];
+
+            // Hitung untuk Nilai Bawah (Harga Naik)
+            if (inputBawah && !isNaN(inputBawah)) {
+                const nBawah = parseFloat(inputBawah);
+                if (nBawah >= 0) {
+                    let tableHTML = `
+                        <div class="result-section">
+                            <h3>📈 Target Sell (Naik)</h3>
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Level Target</th>
+                                            <th style="text-align: right;">Harga</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                    `;
+                    for(let i=1; i<=8; i++) {
+                        let val = Math.pow(Math.sqrt(nBawah) + (i*0.125), 2);
+                        tableHTML += `
+                                        <tr class="row-up">
+                                            <td class="td-level">Target Sell ${levelNames[i-1]}</td>
+                                            <td class="td-value" style="color:var(--accent-green);">${val.toFixed(5)}</td>
+                                        </tr>`;
+                    }
+                    tableHTML += `
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `;
+                    resultsDiv.innerHTML += tableHTML;
+                    hasResults = true;
+                }
+            }
+
+            // Hitung untuk Nilai Atas (Harga Turun)
+            if (inputAtas && !isNaN(inputAtas)) {
+                const nAtas = parseFloat(inputAtas);
+                if (nAtas >= 0) {
+                    let tableHTML = `
+                        <div class="result-section">
+                            <h3 style="margin-top:15px">📉 Target Buy (Turun)</h3>
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Level Target</th>
+                                            <th style="text-align: right;">Harga</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                    `;
+                    for(let i=1; i<=8; i++) {
+                        let val = Math.pow(Math.sqrt(nAtas) - (i*0.125), 2);
+                        tableHTML += `
+                                        <tr class="row-down">
+                                            <td class="td-level">Target Buy ${levelNames[i-1]}</td>
+                                            <td class="td-value" style="color:var(--accent-red);">${val.toFixed(5)}</td>
+                                        </tr>`;
+                    }
+                    tableHTML += `
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `;
+                    resultsDiv.innerHTML += tableHTML;
+                    hasResults = true;
+                }
+            }
+
+            if (hasResults) {
+                resultsDiv.classList.add('show');
+            } else {
+                resultsDiv.classList.remove('show');
+                alert('Silakan masukkan minimal satu nilai angka yang valid!');
+            }
+        }
+    </script>
+</body>
+
+</html>
