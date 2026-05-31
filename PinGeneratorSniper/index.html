@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator PIN Admin</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --primary: #10b981; /* Green for admin */
+            --primary-hover: #059669;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --accent-red: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 32px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+        
+        p {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        
+        select option {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            margin-top: 8px;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        #resultArea {
+            margin-top: 24px;
+            padding: 20px;
+            background-color: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            border: 1px dashed var(--primary);
+            display: none;
+        }
+
+        #generatedPin {
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Generator PIN Aktivasi</h2>
+        <p>Gunakan alat ini untuk membuat PIN bagi klien Anda.</p>
+
+        <div class="input-group">
+            <label for="deviceId">Device ID Klien (6 Digit)</label>
+            <input type="text" id="deviceId" placeholder="Contoh: 456123" maxlength="6">
+        </div>
+
+        <div class="input-group">
+            <label for="duration">Pilih Masa Aktif (Trial)</label>
+            <select id="duration">
+                <option value="1">1 Hari</option>
+                <option value="3">3 Hari</option>
+                <option value="7">7 Hari</option>
+                <option value="14">14 Hari</option>
+                <option value="30" selected>1 Bulan (30 Hari)</option>
+                <option value="90">3 Bulan (90 Hari)</option>
+                <option value="180">6 Bulan (180 Hari)</option>
+                <option value="365">1 Tahun (365 Hari)</option>
+                <option value="9999">Permanen (Gunakan Master PIN: 888888)</option>
+            </select>
+        </div>
+
+        <button onclick="generatePin()">Generate PIN</button>
+
+        <div id="resultArea">
+            <div style="font-size: 14px; color: var(--text-muted);">PIN Aktivasi:</div>
+            <div id="generatedPin">------</div>
+            <div style="font-size: 12px; margin-top: 10px; color: var(--accent-red);">Berikan PIN ini kepada klien Anda.</div>
+        </div>
+    </div>
+
+    <script>
+        function generatePin() {
+            const deviceId = document.getElementById('deviceId').value.trim();
+            const duration = parseInt(document.getElementById('duration').value);
+
+            if (!deviceId || isNaN(deviceId) || deviceId.length !== 6) {
+                alert("Harap masukkan Device ID yang valid (6 digit angka).");
+                return;
+            }
+            
+            if (duration === 9999) {
+                document.getElementById('generatedPin').innerText = "888888";
+                document.getElementById('resultArea').style.display = 'block';
+                return;
+            }
+
+            // Rumus sama dengan di Kalkulator: 
+            // calculatedNum = (DeviceID * 3) + 777 + (Durasi_Hari * 123)
+            let calculatedNum = parseInt(deviceId) * 3 + 777 + (duration * 123);
+            let expectedPin = calculatedNum.toString().slice(-6);
+
+            document.getElementById('generatedPin').innerText = expectedPin;
+            document.getElementById('resultArea').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
