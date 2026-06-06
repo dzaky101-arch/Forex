@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MT5 EA License Key Generator (5-Digit)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background Decorative Glows -->
+    <div class="glow-bg">
+        <div class="glow-circle glow-circle-1"></div>
+        <div class="glow-circle glow-circle-2"></div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <span class="logo-icon">🔢</span>
+                <h1>EA License <span>Generator</span></h1>
+            </div>
+            <p class="subtitle">Buat kunci lisensi 5 angka (5-Digit Key) untuk membatasi akses Expert Advisor MT5 Anda berdasarkan Nomor Akun klien.</p>
+        </header>
+
+        <div class="grid">
+            <!-- Form Card -->
+            <div class="card glass">
+                <div class="card-header">
+                    <h2>Parameter Lisensi</h2>
+                    <p>Masukkan nomor akun MT5 klien untuk membuat kunci 5-digit</p>
+                </div>
+                
+                <div class="card-body">
+                    <!-- Account Lock -->
+                    <div class="form-group">
+                        <label for="account-input" class="label-title">Nomor Akun Trading MT5</label>
+                        <span class="label-desc">Masukkan nomor akun klien Anda (angka saja). Masukkan angka <strong>0</strong> untuk membuat Master Key (bebas digunakan di semua akun).</span>
+                        <input type="text" id="account-input" class="form-control" placeholder="Contoh: 1234567" required>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <!-- Secret Salt -->
+                    <div class="form-group">
+                        <label for="salt-input" class="label-title">Secret Salt (Kunci Rahasia)</label>
+                        <span class="label-desc">Harus sama dengan SECRET_SALT yang tertulis di kode EA (.mq5) Anda</span>
+                        <input type="text" id="salt-input" class="form-control font-mono" value="Trding_MA_ATR_Secret_2026">
+                    </div>
+
+                    <!-- Action Button -->
+                    <button id="generate-btn" class="btn btn-primary">
+                        <span>Generate 5-Digit Key</span>
+                        <span class="spinner hidden"></span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Output and Instructions -->
+            <div class="right-column">
+                <!-- Output Card -->
+                <div class="card glass result-card">
+                    <div class="card-header">
+                        <h2>Kunci Lisensi 5-Digit</h2>
+                        <p>Salin kunci angka ini dan masukkan ke parameter input EA di MT5</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="result-box result-box-short">
+                            <textarea id="license-output" readonly placeholder="Kunci 5-digit akan muncul di sini..."></textarea>
+                        </div>
+                        <button id="copy-btn" class="btn btn-secondary" disabled>
+                            <span class="btn-icon">📋</span> <span id="copy-text">Salin Kunci</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- How to Use Card -->
+                <div class="card glass info-card">
+                    <div class="card-header">
+                        <h3>Cara Penggunaan</h3>
+                    </div>
+                    <div class="card-body">
+                        <ol class="steps-list">
+                            <li>Masukkan nomor akun trading MT5 klien di kolom kiri, lalu klik <strong>Generate 5-Digit Key</strong>.</li>
+                            <li>Klik <strong>Salin Kunci</strong> untuk menyalin kode lisensi 5 digit yang dihasilkan.</li>
+                            <li>Buka MetaTrader 5, pasang EA ke chart.</li>
+                            <li>Di tab <strong>Inputs</strong> pada pengaturan EA, tempelkan (Paste) kunci 5 digit tersebut ke parameter <code>LicenseKey</code>.</li>
+                            <li>Klik <strong>OK</strong>. EA akan memvalidasi nomor akun trading secara otomatis.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>&copy; 2026 Antigravity. Hak Cipta Dilindungi Undang-Undang. Didesain secara premium untuk pengelolaan lisensi trading robot berbasis kunci numerik 5-digit sederhana.</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
